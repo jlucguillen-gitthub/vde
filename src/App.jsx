@@ -20,7 +20,7 @@ function App() {
 
   }, []);
 
-  return <>Bonjour</>;
+  return <>Bonjour la chorale</>;
 }
 
 export default App;
