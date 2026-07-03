@@ -22,7 +22,7 @@ import ConcertsAdmin from "../pages/admin/Concerts";
 import AdminLogin from "../pages/admin/login/login";
 import Dashboard from "../pages/admin/dashboard/Dashboard";
 import AdminLayout from "../layouts/AdminLayout";
-import SaisonList from "../pages/admin/saisons/SaisonList";
+import SaisonPage from "../pages/admin/saisons/SaisonPage";
 
 export default function Router() {
     return (
@@ -60,8 +60,7 @@ export default function Router() {
                 >
                     <Route index element={<Dashboard />} />
 
-                    <Route path="saisons" element={<div>Saisons</div>} />
-                    <Route path="saisonsliste" element={<SaisonList />} />
+                    <Route path="saisons" element={<SaisonPage />} />
                     <Route path="chanteurs" element={<div>Chanteurs</div>} />
                     <Route path="chansons" element={<div>Chansons</div>} />
                     <Route path="concerts" element={<div>Concerts</div>} />

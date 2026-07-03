@@ -37,10 +37,6 @@ export default function AdminLayout() {
           <p style={{ cursor: "pointer" }} onClick={() => navigate("/admin/saisons")}>
             📅 Saisons
           </p>
-          <p style={{ cursor: "pointer" }} onClick={() => navigate("/admin/saisonsliste")}>
-            📅 Saisons Liste
-          </p>
-
           <p style={{ cursor: "pointer" }} onClick={() => navigate("/admin/chanteurs")}>
             👤 Chanteurs
           </p>
