@@ -12,7 +12,7 @@ import DashboardChanteur from "../pages/chanteur/Dashboard";
 import DashboardAdmin from "../pages/admin/Dashboard";
 import { Navigate } from "react-router-dom";
 import Home from "../pages/public/Home";
-import Chansons from "../pages/chanteur/Chansons";
+import Chansons from "../pages/chanteur/MesChansons";
 import Concerts from "../pages/chanteur/Concerts";
 import Repetitions from "../pages/chanteur/Repetitions";
 import Votes from "../pages/chanteur/Votes";
@@ -23,6 +23,8 @@ import AdminLogin from "../pages/admin/login/login";
 import Dashboard from "../pages/admin/dashboard/Dashboard";
 import AdminLayout from "../layouts/AdminLayout";
 import SaisonPage from "../pages/admin/saisons/SaisonPage";
+import ChanteurPage from "../pages/admin/chanteurs/ChanteurPage";
+import MesChansons from "../pages/chanteur/MesChansons";
 
 export default function Router() {
     return (
@@ -39,7 +41,7 @@ export default function Router() {
                 <Route element={<TokenGuard />}>
                     <Route path="/app" element={<ChanteurLayout />}>
                         <Route index element={<DashboardChanteur />} />
-                        <Route path="chansons" element={<Chansons />} />
+                        <Route path="chansons" element={<MesChansons />} />
                         <Route path="concerts" element={<Concerts />} />
                         <Route path="repetitions" element={<Repetitions />} />
                         <Route path="votes" element={<Votes />} />
@@ -61,7 +63,7 @@ export default function Router() {
                     <Route index element={<Dashboard />} />
 
                     <Route path="saisons" element={<SaisonPage />} />
-                    <Route path="chanteurs" element={<div>Chanteurs</div>} />
+                    <Route path="chanteurs" element={<ChanteurPage />} />
                     <Route path="chansons" element={<div>Chansons</div>} />
                     <Route path="concerts" element={<div>Concerts</div>} />
                     <Route path="repetitions" element={<div>Répetitions</div>} />
