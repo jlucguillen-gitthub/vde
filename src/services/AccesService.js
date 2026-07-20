@@ -14,7 +14,7 @@ export class AccesService {
     }
 
     async generateLink(chanteur) {
-
+        console.log("AccesService.generateLink", chanteur);
         const saisonId = chanteur.saison_id;
 
         // 1. chercher accès actif
@@ -29,7 +29,7 @@ export class AccesService {
         if (existing && new Date(existing.date_expiration) > now) {
             return {
                 token: existing.token,
-                url: `http://localhost:5173/${existing.token}`,
+                url: `${import.meta.env.VITE_APP_BASE_URL}/${existing.token}`,
                 expiration: existing.date_expiration,
                 created: false
             };
@@ -51,7 +51,7 @@ export class AccesService {
 
             return {
                 token,
-                url: `http://localhost:5173/${token}`,
+                url: `${import.meta.env.VITE_APP_BASE_URL}/${token}`,
                 expiration: expiration.toISOString(),
                 created: false
             };
@@ -70,7 +70,7 @@ export class AccesService {
 
         return {
             token,
-            url: `http://localhost:5173/${token}`,
+            url: `${import.meta.env.VITE_APP_BASE_URL}/${token}`,
             expiration: expiration.toISOString(),
             created: true
         };

@@ -2,8 +2,23 @@ export class BaseController {
 
     constructor(service) {
         this.service = service;
+        this.context = {};
     }
 
+    initialize(context = {}) {
+
+        this.context = Object.freeze({
+            ...context
+        });
+
+        if (this.service?.initialize) {
+            this.service.initialize(this.context);
+        }
+    }
+
+    async prepareCreate() {
+        return {};
+    }
     async handle(serviceCall, { onSuccess, onError } = {}) {
 
         const res = await serviceCall();

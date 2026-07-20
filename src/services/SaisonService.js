@@ -17,12 +17,22 @@ export class SaisonService extends BaseService {
     async getAll(orderBy = "date_debut") {
         return super.getAll(orderBy);
     }
+    async getActive() {
 
+        const { data, error } = await  this.repository.findOneBy({
+            active: true
+        });
+        if (error) {
+            return BaseResponse.error([], error.message);
+        }
 
+        return BaseResponse.success(this.mapper.toUi(data));
+    }
 
     // ⭐ spécifique métier
     async setActive(id) {
 
+        console.log("et ici")
         const { error } = await supabase
             .rpc("set_active_saison", { p_id: id });
 

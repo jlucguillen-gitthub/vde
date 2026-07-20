@@ -1,12 +1,20 @@
 import { BaseResponse } from "../core/framework/BaseResponse";
 
 export class BaseService {
-    mapper = null
+    mapper = null;
+    context = {};
+
     constructor(repository, validator = null) {
         this.repository = repository;
         this.validator = validator;
     }
+    initialize(context = {}) {
 
+        this.context = Object.freeze({
+            ...context
+        });
+
+    }
     // 📦 GET ALL
     async getAll(orderBy = "created_at") {
         const { data, error } = await this.repository.findAll(orderBy);
@@ -42,7 +50,8 @@ export class BaseService {
         }
 
         let result;
-        const dbEntity = this.mapper.toDb(entity);
+        
+        const dbEntity = this.mapper ? this.mapper.toDb(entity) : entity;
         console.log("dbEntity", dbEntity);
         if (entity.id) {
             result = await this.repository.update(entity.id, dbEntity);

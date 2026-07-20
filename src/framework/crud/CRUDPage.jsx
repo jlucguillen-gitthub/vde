@@ -2,16 +2,27 @@ import { useEffect, useMemo, useState } from "react";
 
 import DataTable from "../table/DataTable";
 import FormModal from "../form/FormModal";
+import { useNavigate } from "react-router-dom";
 
-export default function CRUDPage({ config }) {
+export default function CRUDPage({ config, context = {} }) {
+    const navigate = useNavigate();
 
 
 
     const [items, setItems] = useState([]);
+    const [title, setTitle] = useState(config.title || "CRUD Page");
     const [open, setOpen] = useState(false);
     const [editItem, setEditItem] = useState(null);
     const [errors, setErrors] = useState([]);
-    const [controller, setController] = useState(config.controller );
+    const [controller, setController] = useState(config.controller);
+    const [formContext, setFormContext] = useState({});
+
+    useEffect(() => {
+
+        controller.initialize(context);
+        setTitle(context.title ?? title);
+
+    }, [controller, context]);
 
     // LOAD
     const load = () => controller.load(setItems);
@@ -33,21 +44,42 @@ export default function CRUDPage({ config }) {
                 break;
 
             case "activate":
-                controller.activate(row.id, load);
+                console.log("par la")
+                controller.activate(row, load);
+                break;
+            case "manageChanteurs":
+                const url = controller.manageChanteurs(row, load);
+                console.log("url", url)
+                navigate(url)
                 break;
 
             case "delete":
-                if(window.confirm("Êtes-vous sûr de vouloir supprimer cet élément ?")) {
+                if (window.confirm("Êtes-vous sûr de vouloir supprimer cet élément ?")) {
                     controller.delete(row.id, load);
                 }
                 break;
 
             default:
-                console.warn("Unknown action:", action);
+                if (typeof controller[action] === "function") {
+                    controller[action](row, load);
+                } else {
+                    console.warn("Unknown action:", action);
+                }
         }
     };
 
     // SAVE (CREATE / UPDATE)
+    const handleAdd = async () => {
+        if (controller.prepareCreate) {
+
+            const extraContext = await controller.prepareCreate();
+
+            setFormContext(extraContext);
+        }
+
+        setEditItem(null);
+        setOpen(true);
+    };
     const handleSave = async (form) => {
         console.log("handleSave form", form);
         try {
@@ -76,7 +108,7 @@ export default function CRUDPage({ config }) {
         <div>
 
             {/* TITLE */}
-            <h1>{config.title}</h1>
+            <h1>{title}</h1>
 
             {/* ERRORS */}
             {errors.length > 0 && (
@@ -90,10 +122,7 @@ export default function CRUDPage({ config }) {
             {/* CREATE BUTTON */}
             <button
                 style={{ marginBottom: 10 }}
-                onClick={() => {
-                    setEditItem(null);
-                    setOpen(true);
-                }}
+                onClick={handleAdd}
             >
                 ➕ Nouveau
             </button>
@@ -109,6 +138,7 @@ export default function CRUDPage({ config }) {
             <FormModal
                 open={open}
                 config={config}
+                context={formContext}
                 errors={errors}
                 initialData={editItem}
                 onClose={() => setOpen(false)}

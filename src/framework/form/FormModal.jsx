@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { FieldRenderers } from "./FieldRenderers";
 
 export default function FormModal({
     open,
     config,
+    context,
     initialData = null,
     errors = [],
     onClose,
@@ -69,7 +71,6 @@ export default function FormModal({
         }
     };
 
-
     return (
         <div style={styles.overlay}>
             <div style={styles.modal}>
@@ -77,55 +78,42 @@ export default function FormModal({
                 <h2>{initialData ? "✏️ Modifier" : "➕ Créer"}</h2>
 
                 <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                    {fields.map((f) => (
-                        f.hideInForm ? null : (
-                            <div key={f.field}>
-                                <label>{f.header}</label>
+                     {
+                        fields.map((f) => {
 
-                                {f.type === "text" && (
-                                    <input
-                                        value={form[f.field] || ""}
-                                        onChange={(e) =>
-                                            handleChange(f.field, e.target.value)
-                                        }
-                                    />
+                            const Renderer = FieldRenderers[f.type];
 
-                                )}
+                            return f.hideInForm ? null : (
+                                <div key={f.field}>
 
-                                {f.type === "date" && (
-                                    <input
-                                        type="date"
-                                        value={form[f.field] || ""}
-                                        onChange={(e) =>
-                                            handleChange(f.field, e.target.value)
-                                        }
-                                    />
-                                )}
+                                    <label>{f.header}</label>
 
-                                {f.type === "number" && (
-                                    <input
-                                        type="number"
-                                        value={form[f.field] || ""}
-                                        onChange={(e) =>
-                                            handleChange(f.field, e.target.value)
-                                        }
-                                    />
-                                )}
+                                    {Renderer && (
+                                        <Renderer
+                                            field={f}
+                                            form={form}
+                                            onChange={handleChange}
+                                            context={context}
+                                        />
+                                    )}
 
-                                {errorsByField[f.field] && (
-                                    <div
-                                        style={{
-                                            color: "#dc3545",
-                                            fontSize: 12,
-                                            marginTop: 4
-                                        }}
-                                    >
-                                        {errorsByField[f.field]}
-                                    </div>
-                                )}
-                            </div>
-                        )
-                    ))}
+                                    {errorsByField[f.field] && (
+                                        <div
+                                            style={{
+                                                color: "#dc3545",
+                                                fontSize: 12,
+                                                marginTop: 4
+                                            }}
+                                        >
+                                            {errorsByField[f.field]}
+                                        </div>
+                                    )}
+
+                                </div>
+                            );
+                        })
+                    }
+                    
                 </div>
 
                 <div style={{ marginTop: 20, display: "flex", gap: 10 }}>

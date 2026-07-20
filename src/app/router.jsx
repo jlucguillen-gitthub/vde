@@ -25,8 +25,11 @@ import AdminLayout from "../layouts/AdminLayout";
 import SaisonPage from "../pages/admin/saisons/SaisonPage";
 import ChanteurPage from "../pages/admin/chanteurs/ChanteurPage";
 import MesChansons from "../pages/chanteur/MesChansons";
+import SaisonChanteursPage from "../pages/admin/saisons/SaisonChanteursPage";
+import { SaisonProvider } from "../components/contexts/SaisonContext";
 
 export default function Router() {
+
     return (
         <BrowserRouter>
             <Routes>
@@ -56,7 +59,9 @@ export default function Router() {
                     path="/admin/*"
                     element={
                         <AdminGuard>
-                            <AdminLayout />
+                            <SaisonProvider>
+                                <AdminLayout />
+                            </SaisonProvider>
                         </AdminGuard>
                     }
                 >
@@ -64,6 +69,7 @@ export default function Router() {
 
                     <Route path="saisons" element={<SaisonPage />} />
                     <Route path="chanteurs" element={<ChanteurPage />} />
+                    <Route path=":nom/chanteurs" element={<SaisonChanteursPage />} />
                     <Route path="chansons" element={<div>Chansons</div>} />
                     <Route path="concerts" element={<div>Concerts</div>} />
                     <Route path="repetitions" element={<div>Répetitions</div>} />

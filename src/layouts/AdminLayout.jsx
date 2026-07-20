@@ -1,10 +1,13 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "../core/supabase/client";
+import { useSaison } from "../components/contexts/SaisonContext";
 
 export default function AdminLayout() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const { saisonActive } = useSaison();
+  
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -72,7 +75,7 @@ export default function AdminLayout() {
           padding: "0 20px"
         }}>
           <div>
-            🎼 Saison active : <b>2026-2027</b>
+            🎼 Saison active : <b>{saisonActive?.nom ?? "Aucune"}</b>
           </div>
 
           <div>

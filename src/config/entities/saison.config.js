@@ -40,6 +40,7 @@ export const saisonConfig = {
     actions: [
         { label: "✏️ Modifier", action: "edit" },
         { label: "⭐ Activer", action: "activate" },
+        { label: "👥 Chanteurs", action: "manageChanteurs" },
         { label: "🗑 Supprimer", action: "delete" }
     ]
 };

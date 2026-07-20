@@ -1,17 +1,28 @@
 import { ChanteurService } from "../services/ChanteurService";
+import { AccesController } from "./AccesController";
 import { BaseController } from "./BaseController";
 
 export class ChanteurController extends BaseController {
 
     constructor() {
         super(new ChanteurService());
+        this.accesController = new AccesController();
     }
 
-    activate(id, onSuccess, onError) {
-        return this.handle(
-            () => this.service.setActive(id),
-            { onSuccess, onError }
-        );
+    generateAccessLink(chanteur) {
+        console.log("generateAccessLink", chanteur);
+        return this.accesController.generateLink(chanteur);
+    }
+    copyAccessLink(link) {
+        navigator.clipboard.writeText(link);
+    }
+    async sendAccessLink(chanteur) {
+        const result = await this.accesController.generateLink(chanteur);
+
+        // pour l'instant console (on fera email étape 9)
+        console.log("Lien à envoyer :", result.url);
+
+        return result;
     }
 
 }

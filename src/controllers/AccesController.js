@@ -10,6 +10,7 @@ export class AccesController {
     }
 
     async generateLink(chanteur) {
+        console.log("AccesController.generateLink", chanteur);
         return this.service.generateLink(chanteur);
     }
 

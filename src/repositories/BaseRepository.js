@@ -12,14 +12,45 @@ export class BaseRepository {
             .select("*")
             .order(orderBy, { ascending: true });
     }
+    async findOneBy(criteria) {
 
+        let query = this.supabase
+            .from(this.table)
+            .select("*");
+
+        Object.entries(criteria).forEach(([field, value]) => {
+            query = query.eq(field, value);
+        });
+        return query.single();
+    }
+    async findBy(criteria, orderBy = null) {
+
+        let query = this.supabase
+            .from(this.table)
+            .select("*");
+
+        Object.entries(criteria).forEach(([field, value]) => {
+            query = query.eq(field, value);
+        });
+
+        if (orderBy) {
+            query = query.order(orderBy, { ascending: true });
+        }
+
+        return query;
+    }
     async insert(data) {
-        return this.supabase.from(this.table).insert(data);
+
+    const { data: sessionData } = await this.supabase.auth.getSession();
+
+    console.log("SESSION SUPABASE", sessionData.session);        
+        return this.supabase.from(this.table).insert(data).select("*").single();
     }
 
     async update(id, data) {
-        return this.supabase.from(this.table).update(data).eq("id", id).select(); // ⭐ IMPORTANT;
+        return this.supabase.from(this.table).update(data).eq("id", id).select("*").single(); // ⭐ IMPORTANT;
     }
+
 
     async findById(id) {
         return this.supabase.from(this.table).select("*").eq("id", id).single();
