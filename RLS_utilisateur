@@ -1,0 +1,26 @@
+CREATE POLICY "authenticated_insert_chansons"
+ON public.chansons
+FOR INSERT
+TO authenticated
+WITH CHECK (true);
+
+CREATE POLICY "authenticated_select_chansons"
+ON public.chansons
+FOR SELECT
+TO authenticated
+USING (true);
+
+CREATE POLICY "authenticated_update_chansons"
+ON public.chansons
+FOR UPDATE
+TO authenticated
+USING (true)
+WITH CHECK (true);
+
+CREATE POLICY "authenticated_delete_chansons"
+ON public.chansons
+FOR DELETE
+TO authenticated
+USING (true);
+
+ALTER TABLE public.chansons ENABLE ROW LEVEL SECURITY;
