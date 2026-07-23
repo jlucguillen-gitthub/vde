@@ -1,22 +1,41 @@
-import { ChansonController } from "../../controllers/ChansonController";
+import { createEntityConfig } from "./createEntityConfig";
+
+import { ChansonRepository } from "../../repositories/ChansonRepository";
+import { ChansonService } from "../../services/ChansonService";
+import { ChansonValidator } from "../../validators/ChansonValidator";
 import { ChansonMapper } from "../../mappers/ChansonMapper";
-import { baseConfig } from "./base.config";
 
-const controller = new ChansonController();
-export const chansonConfig = {
-    ...baseConfig,
-    entity: "Chansons",
-    title: "🎵 Chansons",
+
+const columns = [
+    {
+        field: "titre",
+        header: "Titre",
+        type: "text",
+        required: true
+    },
+    {
+        field: "paroles",
+        header: "Paroles",
+        type: "text",
+    }
+];
+
+
+export const chansonConfig = createEntityConfig({
+
+    entity: "chanson",
+
+    title: "🎵 les Chansons",
+
     table: "chansons",
-    controller: controller,
-    mapper: ChansonMapper,
-    columns: [
-        { field: "titre", header: "Titre", type: "text" },
-        { field: "paroles", header: "Paroles", type: "text" },
 
-    ],
-    actions: [
-        ...baseConfig.actions,
 
-    ]
-};
+    Repository: ChansonRepository,
+    Service: ChansonService,
+    Validator: ChansonValidator,
+    Mapper: ChansonMapper,
+
+
+    columns
+
+});

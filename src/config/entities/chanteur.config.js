@@ -43,4 +43,10 @@ export const chanteurConfig = createEntityConfig({
     // Controller: chanteurController
     columns,
     defaultOrderBy: "nom",
+    actions: [
+        { label: "✏️ Modifier", action: "edit" },
+        { label: "⭐ Activer", action: "activate" },
+        { label: "👥 Chanteurs", action: "manageChanteurs" },
+        { label: "🗑 Supprimer", action: "delete" }
+    ]    
 });

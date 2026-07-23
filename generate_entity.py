@@ -188,6 +188,10 @@ export const {entity}Config = createEntityConfig({{
 
     columns
 
+    actions: [
+        ...baseConfig.actions,
+    ]
+
 }});
 """
 

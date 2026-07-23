@@ -1,18 +1,10 @@
-export class ChansonMapper {
+import { BaseMapper } from "./BaseMapper";
 
-    static toDb(form) {
-        console.log(form)
-        return {
-            titre: form.titre,
-            paroles: form.paroles,
-        };
+
+export class ChansonMapper extends BaseMapper {
+
+    constructor(columns) {
+        super(columns);
     }
 
-    static toUi(db) {
-        return {
-            id: db.id,
-            titre: db.titre,
-            paroles: db.paroles,
-        };
-    }
 }
