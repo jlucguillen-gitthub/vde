@@ -1,6 +1,31 @@
 export class BaseValidator {
-    constructor() {
+    constructor(columns = []) {
+        this.columns = columns;
         this.errors = [];
+    }
+    validate(entity) {
+        this.errors = [];
+        console.log(entity)
+        console.log(this.columns)
+        this.columns
+            .filter(c => c.required)
+            .forEach(c => {
+                console.log(c)
+                const value = entity[c.field];
+
+                if (
+                    value === undefined ||
+                    value === null ||
+                    value === ""
+                ) {
+                    this.addError(
+                        c.field,
+                        `${c.header} obligatoire`
+                    );
+                }
+            });
+
+        return this.result();
     }
 
     addError(field, message) {

@@ -14,22 +14,34 @@ export class SaisonController extends BaseController {
             { onSuccess, onError }
         );
     }
+    // activate(saison, onSuccess, onError) {
+
+    //     return this.handle(
+    //         () => this.service.setActive(saison.id),
+    //         {
+    //             onSuccess: () => {
+
+    //                 this.context.refresh();
+
+    //                 onSuccess?.(saison);
+    //             },
+    //             onError
+    //         }
+    //     );
+    // }
     activate(saison, onSuccess, onError) {
 
         return this.handle(
             () => this.service.setActive(saison.id),
             {
                 onSuccess: () => {
-
-                    this.context.updateSaisonActive(saison);
-
+                    this.context?.refresh();
                     onSuccess?.(saison);
                 },
                 onError
             }
         );
     }
-
     manageChanteurs(saison, load) {
 
         // window.location.href =

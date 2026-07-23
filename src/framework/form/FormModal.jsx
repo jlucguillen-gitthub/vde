@@ -8,6 +8,7 @@ export default function FormModal({
     initialData = null,
     errors = [],
     onClose,
+    onFieldChange,
     onSave
 }) {
 
@@ -43,6 +44,7 @@ export default function FormModal({
     const fields = config.columns || [];
 
     const handleChange = (name, value) => {
+        onFieldChange(name)
         setForm(prev => ({
             ...prev,
             [name]: value

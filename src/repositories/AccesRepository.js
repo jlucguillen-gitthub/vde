@@ -5,6 +5,12 @@
  *  renouvellement
  *  récupération par token
  *  incrémentation du nombre de connexions
+ * 
+ * maybeSingle() est adapté ici :
+1 ligne → retourne la ligne
+0 ligne → retourne null
+plusieurs lignes → erreur
+
  */
 import { BaseRepository } from "./BaseRepository";
 
@@ -22,15 +28,19 @@ export class AccesRepository extends BaseRepository {
             .single();
     }
 
-    async findActiveByChanteur(chanteurId, saisonId) {
-        return this.supabase
+    async findActiveBySaisonChanteur(saisonchanteurId) {
+
+        const { data, error } = await this.supabase
             .from(this.table)
             .select("*")
-            .eq("chanteur_id", chanteurId)
-            .eq("saison_id", saisonId)
+            .eq("saison_chanteur_id", saisonchanteurId)
             .is("deleted_at", null)
-            .is("actif", true)
-            .single();
-    }
+            .eq("actif", true)
+            .maybeSingle();
 
+        return {
+            data,
+            error
+        };
+    }
 }

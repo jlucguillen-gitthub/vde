@@ -19,23 +19,43 @@ import { BaseService } from "./BaseService";
 import { SaisonChanteurRepository } from "../repositories/SaisonChanteurRepository";
 import { ChanteurRepository } from "../repositories/ChanteurRepository";
 import { BaseResponse } from "../core/framework/BaseResponse";
+import { SaisonChanteursValidator } from "../validators/SaisonChanteursValidator";
 
-
+const validator = new SaisonChanteursValidator();
 export class SaisonChanteurService extends BaseService {
 
     constructor() {
 
         super(
-            new SaisonChanteurRepository()
+            new SaisonChanteurRepository(),
+            validator
         );
 
         this.chanteurRepository = new ChanteurRepository();
     }
+
+
+
     async getAll() {
 
         const saisonId = this.context.saisonId;
+        const { data, error } = await this.repository.findBySaison(saisonId);
+        if (error) {
+            return {
+                success: false,
+                errors: error
+            };
+        }
+        console.log(data)
+        data.sort((a, b) =>
+            a.chanteurs.nom.localeCompare(b.chanteurs.nom)
+        );
 
-        return this.repository.findBySaison(saisonId);
+        return {
+            success: true,
+            data
+        };
+        // return this.repository.findBySaison(saisonId);
 
     }
 
@@ -101,19 +121,28 @@ export class SaisonChanteurService extends BaseService {
 
 
         // 3 - différence
-        const disponibles = chanteurs.filter(
-            chanteur =>
-                !idsExistants.includes(chanteur.id)
-        );
-
+        const disponibles = chanteurs
+            .filter(
+                chanteur =>
+                    !idsExistants.includes(chanteur.id)
+            )
+            .sort((a, b) =>
+                a.nom.localeCompare(b.nom, "fr", { sensitivity: "base" })
+            );
 
         return BaseResponse.success(disponibles);
     }
 
 
     async save(data) {
-
-
+        if (this.validator) {
+            const validation = this.validator.validate(data);
+            console.log("validation", validation);
+            if (!validation.valid) {
+                return BaseResponse.error(validation.errors);
+            }
+        }
+        console.log("save", data);
         return this.addChanteur(
             data.chanteur_id
         );
@@ -122,7 +151,16 @@ export class SaisonChanteurService extends BaseService {
      * Ajout d'un chanteur dans une saison
      */
     async addChanteur(chanteurId) {
+        console.log("chanteurId",chanteurId);
+        if (this.validator) {
+            const validation = this.validator.validate(chanteurId);
+            console.log("validation", validation);
+            if (!validation.valid) {
+                return BaseResponse.error(validation.errors);
+            }
+        }
         const saisonId = this.context.saisonId;
+
 
         console.log(saisonId, chanteurId)
         const { data: exists } =
@@ -139,9 +177,14 @@ export class SaisonChanteurService extends BaseService {
             );
         }
 
+        return await this.insert({
+            saison_id: saisonId,
+            chanteur_id: chanteurId
+        });
+        //Ton insert() fait déjà le traitement métier. Il ne faut pas l'encapsuler une deuxième fois.
 
         const { data, error } =
-            await this.repository.insert({
+            await this.insert({
                 saison_id: saisonId,
                 chanteur_id: chanteurId
             });
@@ -155,7 +198,28 @@ export class SaisonChanteurService extends BaseService {
         return BaseResponse.success(data);
     }
 
+    async insert(data) {
+        console.log(data)
+        const result = await this.repository.insert(data);
 
+        if (result.error?.code === "23505") {
+            return BaseResponse.error(
+                [],
+                "Ce chanteur est déjà associé à cette saison. Voulez-vous le réactiver ?"
+            );
+        }
+
+        console.log(result)
+        if (result.error) {
+            return BaseResponse.error(
+                [],
+                result.error.message
+            );
+        }
+        BaseResponse.success(result.data)
+        console.log(BaseResponse)
+        return BaseResponse.success(result.data);
+    }
 
     /**
      * Retrait d'un chanteur d'une saison

@@ -13,34 +13,41 @@ export class AccesService {
         this.repository = new AccesRepository();
     }
 
-    async generateLink(chanteur) {
-        console.log("AccesService.generateLink", chanteur);
-        const saisonId = chanteur.saison_id;
+    async generateLink(saisonchanteur) {
 
-        // 1. chercher accès actif
+        console.log("AccesService.generateLink", saisonchanteur);
+
+        // 1. chercher accès actif lié à cette inscription saison
         const { data: existing } =
-            await this.repository.findActiveByChanteur(chanteur.id, saisonId);
+            await this.repository.findActiveBySaisonChanteur(
+                saisonchanteur.id
+            );
 
         const now = new Date();
+
         const expiration = new Date();
         expiration.setDate(expiration.getDate() + 30);
 
-        // 2. si existe ET pas expiré => on retourne
+
+        // 2. si existe ET pas expiré => on retourne le lien existant
         if (existing && new Date(existing.date_expiration) > now) {
+
             return {
                 token: existing.token,
-                url: `${import.meta.env.VITE_APP_BASE_URL}/${existing.token}`,
+                url: `${import.meta.env.VITE_APP_BASE_URL}/chanteur/${existing.token}`,
                 expiration: existing.date_expiration,
                 created: false
             };
         }
 
+
         const token = crypto.randomUUID();
 
-        // 3. si existe mais expiré => update
+
+        // 3. si existe mais expiré => on renouvelle
         if (existing) {
 
-            const { data } = await this.repository.update(existing.id, {
+            await this.repository.update(existing.id, {
                 token,
                 date_creation: now.toISOString(),
                 date_expiration: expiration.toISOString(),
@@ -51,22 +58,23 @@ export class AccesService {
 
             return {
                 token,
-                url: `${import.meta.env.VITE_APP_BASE_URL}/${token}`,
+                url: `${import.meta.env.VITE_APP_BASE_URL}/chanteur/${token}`,
                 expiration: expiration.toISOString(),
                 created: false
             };
         }
 
-        // 4. sinon insert
-        const { data } = await this.repository.insert({
-            chanteur_id: chanteur.id,
-            saison_id: saisonId,
+
+        // 4. sinon création d'un nouvel accès
+        await this.repository.insert({
+            saison_chanteur_id: saisonchanteur.id,
             token,
             date_creation: now.toISOString(),
             date_expiration: expiration.toISOString(),
             nb_connexions: 0,
             actif: true
         });
+
 
         return {
             token,

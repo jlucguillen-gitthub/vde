@@ -9,24 +9,27 @@ import ChanteurLayout from "../pages/chanteur/ChanteurLayout";
 import DashboardChanteur from "../pages/chanteur/Dashboard";
 
 
-import DashboardAdmin from "../pages/admin/Dashboard";
+// import DashboardAdmin from "../pages/admin/referentiels/Dashboardels/dashboard";
 import { Navigate } from "react-router-dom";
 import Home from "../pages/public/Home";
 import Chansons from "../pages/chanteur/MesChansons";
 import Concerts from "../pages/chanteur/Concerts";
 import Repetitions from "../pages/chanteur/Repetitions";
 import Votes from "../pages/chanteur/Votes";
-import Chanteurs from "../pages/admin/Chanteurs";
-import ChansonsAdmin from "../pages/admin/Chansons";
-import ConcertsAdmin from "../pages/admin/Concerts";
-import AdminLogin from "../pages/admin/login/login";
-import Dashboard from "../pages/admin/dashboard/Dashboard";
+// import Chanteurs from "../pages/admin/referentiels/Chanteursels/chanteurs";
+import ChansonsAdmin from "../pages/Chansons";
+import ConcertsAdmin from "../pages/Concerts";
+import AdminLogin from "../pages/admin/referentiels/login/login";
+import Dashboard from "../pages/admin/referentiels/dashboard/Dashboard";
 import AdminLayout from "../layouts/AdminLayout";
-import SaisonPage from "../pages/admin/saisons/SaisonPage";
-import ChanteurPage from "../pages/admin/chanteurs/ChanteurPage";
+import SaisonPage from "../pages/admin/referentiels/saisons/SaisonPage";
+import ChanteurPage from "../pages/admin/referentiels/chanteurs/ChanteurPage";
 import MesChansons from "../pages/chanteur/MesChansons";
-import SaisonChanteursPage from "../pages/admin/saisons/SaisonChanteursPage";
+import SaisonChanteursPage from "../pages/admin/referentiels/saisons/SaisonChanteursPage";
 import { SaisonProvider } from "../components/contexts/SaisonContext";
+import ChanteurSaisonPage from "../pages/admin/saisons/ChanteurSaisonPage";
+import ChansonPage from "../pages/admin/referentiels/chansons/ChansonPage";
+import PupitrePage from "../pages/admin/referentiels/puptitres/PupitrePage";
 
 export default function Router() {
 
@@ -42,7 +45,7 @@ export default function Router() {
 
                 {/* CHANTEUR */}
                 <Route element={<TokenGuard />}>
-                    <Route path="/app" element={<ChanteurLayout />}>
+                    <Route path="/chanteur/:token" element={<ChanteurLayout />}>
                         <Route index element={<DashboardChanteur />} />
                         <Route path="chansons" element={<MesChansons />} />
                         <Route path="concerts" element={<Concerts />} />
@@ -66,11 +69,16 @@ export default function Router() {
                     }
                 >
                     <Route index element={<Dashboard />} />
+                    {/* saisons programme */}
+                    <Route path="saisons/:saison_nom/chanteurs" element={<ChanteurSaisonPage />} />
+                    <Route path="saisons/:saison_nom/chansons" element={`<ChansonsSaisonPage />`} />
 
+                    {/* réferentiels */}
                     <Route path="saisons" element={<SaisonPage />} />
                     <Route path="chanteurs" element={<ChanteurPage />} />
-                    <Route path=":nom/chanteurs" element={<SaisonChanteursPage />} />
-                    <Route path="chansons" element={<div>Chansons</div>} />
+                    <Route path=":saison_nom/chanteurs" element={<SaisonChanteursPage />} />
+                    <Route path="chansons" element={<ChansonPage />} />
+                    <Route path="pupitres" element={<PupitrePage />} />
                     <Route path="concerts" element={<div>Concerts</div>} />
                     <Route path="repetitions" element={<div>Répetitions</div>} />
                     <Route path="invitations" element={<div>Invitations</div>} />

@@ -4,8 +4,8 @@ import { BaseController } from "./BaseController";
 
 export class ChanteurController extends BaseController {
 
-    constructor() {
-        super(new ChanteurService());
+    constructor(service) {
+        super(service);
         this.accesController = new AccesController();
     }
 

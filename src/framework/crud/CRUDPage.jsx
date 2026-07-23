@@ -22,14 +22,14 @@ export default function CRUDPage({ config, context = {} }) {
         controller.initialize(context);
         setTitle(context.title ?? title);
 
-    }, [controller, context]);
+    }, [controller, context.saisonId]);
 
     // LOAD
     const load = () => controller.load(setItems);
 
     useEffect(() => {
         load();
-    }, [config.entity]);
+    }, [config.entity, context.saisonId]);
 
 
 
@@ -69,6 +69,12 @@ export default function CRUDPage({ config, context = {} }) {
     };
 
     // SAVE (CREATE / UPDATE)
+    const onFieldChange =  (field) => {
+        console.log(field)
+        setErrors(prev => prev.filter(e => e.field !== field));
+    };
+
+    // SAVE (CREATE / UPDATE)
     const handleAdd = async () => {
         if (controller.prepareCreate) {
 
@@ -90,7 +96,11 @@ export default function CRUDPage({ config, context = {} }) {
             console.log("handleSave result", result);
             if (!result.success) {
                 console.log("dans result en erreur", result);
-                setErrors(result.errors || []);
+                setErrors(
+                    result.errors?.length
+                        ? result.errors
+                        : [{ message: result.message }]
+                );
                 return;
             }
             console.log("avnt setOen");
@@ -142,6 +152,7 @@ export default function CRUDPage({ config, context = {} }) {
                 errors={errors}
                 initialData={editItem}
                 onClose={() => setOpen(false)}
+                onFieldChange = {onFieldChange}
                 onSave={handleSave}
             />
 

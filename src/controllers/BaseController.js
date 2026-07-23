@@ -61,5 +61,11 @@ export class BaseController {
             { onSuccess, onError }
         );
     }
+    async getAll(onSuccess, onError) {
+        return this.handle(
+            () => this.service.getAll(),
+            { onSuccess, onError }
+        );
+    }
 
 }

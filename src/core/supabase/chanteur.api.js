@@ -2,19 +2,28 @@ import { supabase } from "./client";
 
 export async function getChanteurByToken(token) {
   const { data, error } = await supabase
-    .from("chanteur_tokens")
+    .from("acces")
     .select(`
-      chanteur_id,
-      chorale_id,
-      chanteurs (*)
+        *,
+        saison_chanteurs (
+            etat (*),
+            saison_id,
+            chanteur_id,
+            chanteurs (*),
+            saisons (*)
+        )
     `)
     .eq("token", token)
-    .single();
+    .eq("actif", true)
+    .is("deleted_at", null)
 
-  if (error) return null;
-
+  console.log(error)
+  console.log(data)
+  if (error || !data) {
+    return null;
+  }  
   return {
-    chanteur: data.chanteurs,
+    chanteur: data.saison_chanteurs,
     chorale_id: data.chorale_id
   };
 }

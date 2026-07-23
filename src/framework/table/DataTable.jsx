@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function DataTable({
     data = [],
@@ -9,9 +9,9 @@ export default function DataTable({
 }) {
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(1);
-    const pageSize = 10;
-    const columns=config.columns || [];
-    const actions=config.actions || [];
+    const [pageSize, setPageSize] = useState(10);
+    const columns = config.columns.filter(c => !c.hideInTable) || [];
+    const actions = config.actions || [];
 
     // 🔍 FILTRE
     const filteredData = useMemo(() => {
@@ -33,7 +33,16 @@ export default function DataTable({
     const paginatedData = useMemo(() => {
         const start = (page - 1) * pageSize;
         return filteredData.slice(start, start + pageSize);
-    }, [filteredData, page]);
+    }, [filteredData, page, pageSize]);
+
+
+    useEffect(() => {
+        const newTotalPages = Math.ceil(filteredData.length / pageSize);
+
+        if (page > newTotalPages) {
+            setPage(1);
+        }
+    }, [pageSize, filteredData.length]);
 
     return (
         <div style={{ fontFamily: "Arial" }}>
@@ -44,6 +53,18 @@ export default function DataTable({
                 justifyContent: "space-between",
                 marginBottom: 10
             }}>
+                <select
+                    value={pageSize}
+                    onChange={(e) => {
+                        setPageSize(Number(e.target.value));
+                        setPage(1);
+                    }}
+                >
+                    <option value={5}>5 par page</option>
+                    <option value={10}>10 par page</option>
+                    <option value={25}>25 par page</option>
+                    <option value={50}>50 par page</option>
+                </select>
                 <input
                     placeholder="🔍 Rechercher..."
                     value={search}
@@ -56,6 +77,7 @@ export default function DataTable({
                         width: 250
                     }}
                 />
+
             </div>
 
             {/* TABLE */}

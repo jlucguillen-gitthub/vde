@@ -7,8 +7,9 @@ export function SaisonProvider({ children }) {
 
     console.log("SaisonProvider")
     // c'est la saison ACTIVE il n' y en a qu'une
-    const [saisonActive, setSaisonActive] = useState(null); 
-    const [saisonSelectionne, setSaisonSelectionne] = useState(null); 
+    const [saisonActive, setSaisonActive] = useState(null);
+    const [saisonSelectionne, setSaisonSelectionne] = useState(null);
+    const [saisons, setSaisons] = useState([]);
     const controller = new SaisonController();
     useEffect(() => {
         controller.getActive(
@@ -20,6 +21,43 @@ export function SaisonProvider({ children }) {
             }
         );
     }, []);
+    useEffect(() => {
+        refresh();
+    }, []);
+    const refresh = () => {
+
+        controller.getAll(
+            (liste) => {
+
+                const saisonsTriees = [...liste]
+                    .filter(s => !s.supprime)
+                    .sort((a, b) => {
+
+                        if (a.active && !b.active) return -1;
+                        if (!a.active && b.active) return 1;
+
+                        return b.date_debut.localeCompare(a.date_debut);
+                    });
+
+                setSaisons(saisonsTriees);
+
+                const active = saisonsTriees.find(s => s.active) ?? null;
+
+                setSaisonActive(active);
+
+                setSaisonSelectionne(prev => {
+
+                    if (!prev)
+                        return active;
+
+                    return saisonsTriees.find(s => s.id === prev.id) ?? active;
+                });
+
+            },
+            console.error
+        );
+
+    };
     const updateSaisonActive = (saison) => {
         setSaisonActive(saison);
     };
@@ -30,11 +68,12 @@ export function SaisonProvider({ children }) {
     return (
         <SaisonContext.Provider
             value={{
+                saisons,
                 saisonActive,
-                updateSaisonActive,
                 saisonSelectionne,
-                updateSaisonSelectionne
-                
+                refresh,
+                updateSaisonActive: setSaisonActive,
+                updateSaisonSelectionne: setSaisonSelectionne
             }}
         >
             {children}

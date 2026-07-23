@@ -15,11 +15,17 @@ export class SaisonService extends BaseService {
     }
 
     async getAll(orderBy = "date_debut") {
-        return super.getAll(orderBy);
+
+        const saisons = await this.repository.findAllActives(orderBy);
+
+        return {
+            success: true,
+            data: saisons
+        };
     }
     async getActive() {
 
-        const { data, error } = await  this.repository.findOneBy({
+        const { data, error } = await this.repository.findOneBy({
             active: true
         });
         if (error) {

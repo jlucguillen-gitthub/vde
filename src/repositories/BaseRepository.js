@@ -12,6 +12,13 @@ export class BaseRepository {
             .select("*")
             .order(orderBy, { ascending: true });
     }
+    async findAllNotDelete(orderBy = "created_at") {
+        return this.supabase
+            .from(this.table)
+            .select("*")
+            .is("deleted_at", null)
+            .order(orderBy, { ascending: true });
+    }
     async findOneBy(criteria) {
 
         let query = this.supabase
@@ -41,9 +48,9 @@ export class BaseRepository {
     }
     async insert(data) {
 
-    const { data: sessionData } = await this.supabase.auth.getSession();
+        const { data: sessionData } = await this.supabase.auth.getSession();
 
-    console.log("SESSION SUPABASE", sessionData.session);        
+        console.log("SESSION SUPABASE", sessionData.session);
         return this.supabase.from(this.table).insert(data).select("*").single();
     }
 
@@ -57,6 +64,19 @@ export class BaseRepository {
     }
 
     async delete(id) {
-        return this.supabase.from(this.table).delete().eq("id", id);
+        console.log("par ici")
+        return await this.softDelete(id)
+        // return this.supabase.from(this.table).delete().eq("id", id);
+    }
+    
+    async softDelete(id) {
+        return this.supabase
+            .from(this.table)
+            .update({
+                deleted_at: new Date().toISOString()
+            })
+            .eq("id", id)
+            .select("*")
+            .single();
     }
 }

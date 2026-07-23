@@ -2,6 +2,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "../core/supabase/client";
 import { useSaison } from "../components/contexts/SaisonContext";
+import AdminMenu from "../components/AdminiMenu";
 
 export default function AdminLayout() {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ export default function AdminLayout() {
       }}>
         <h2>🎼 Chorale</h2>
 
-        <nav style={{ marginTop: "30px" }}>
+        {/* <nav style={{ marginTop: "30px" }}>
           <p style={{ cursor: "pointer" }} onClick={() => navigate("/admin")}>
             🏠 Dashboard
           </p>
@@ -59,7 +60,8 @@ export default function AdminLayout() {
           <p style={{ cursor: "pointer" }} onClick={() => navigate("/admin/invitations")}>
             📨 Invitations
           </p>
-        </nav>
+        </nav> */}
+        <AdminMenu />
       </div>
 
       {/* MAIN */}

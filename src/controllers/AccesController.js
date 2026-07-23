@@ -9,9 +9,9 @@ export class AccesController {
         this.service = new AccesService();
     }
 
-    async generateLink(chanteur) {
-        console.log("AccesController.generateLink", chanteur);
-        return this.service.generateLink(chanteur);
+    async generateLink(saisonchanteur) {
+        console.log("AccesController.generateLink", saisonchanteur);
+        return this.service.generateLink(saisonchanteur);
     }
 
 }

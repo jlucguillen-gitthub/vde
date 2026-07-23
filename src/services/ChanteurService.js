@@ -1,17 +1,12 @@
 import { BaseService } from "./BaseService";
 import { supabase } from "../core/supabase/client";
 import { BaseResponse } from "../core/framework/BaseResponse";
-import { ChanteurMapper } from "../mappers/ChanteurMapper";
-import { ChanteurValidator } from "../validators/ChanteurValidator";
-import { ChanteurRepository } from "../repositories/ChanteurRepository";
 
-const repo = new ChanteurRepository();
-const validator = new ChanteurValidator();
 export class ChanteurService extends BaseService {
-    mapper = ChanteurMapper;
 
-    constructor() {
-        super(repo, validator);
+
+    constructor(repository, validator= null, mapper= null) {
+        super(repository, validator, mapper);
     }
 
     async getAll(orderBy = "nom") {

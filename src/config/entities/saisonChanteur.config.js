@@ -6,7 +6,7 @@ const controller = new SaisonChanteurController();
 export const saisonChanteurConfig = {
     ...baseConfig,
     entity: "saisons",
-    title: "📅 la saison",
+    title: "la saison",
     table: "saisons",
     controller: controller,
 
@@ -15,7 +15,11 @@ export const saisonChanteurConfig = {
             field: "chanteur_id",
             header: "Chanteur",
             type: "select",
-            source: "availableChanteurs"
+            source: "availableChanteurs",
+            render: (v, row) => {
+                return `${row.chanteurs.nom} ${row.chanteurs.prenom}`
+            }
+
         },
         // {
         //     field: "chanteurs",

@@ -4,9 +4,10 @@ export class BaseService {
     mapper = null;
     context = {};
 
-    constructor(repository, validator = null) {
+    constructor(repository, validator = null, mapper = null) {
         this.repository = repository;
         this.validator = validator;
+        this.mapper = mapper;
     }
     initialize(context = {}) {
 
@@ -17,7 +18,7 @@ export class BaseService {
     }
     // 📦 GET ALL
     async getAll(orderBy = "created_at") {
-        const { data, error } = await this.repository.findAll(orderBy);
+        const { data, error } = await this.repository.findAllNotDelete(orderBy);
 
         if (error) {
             return BaseResponse.error([], error.message);
