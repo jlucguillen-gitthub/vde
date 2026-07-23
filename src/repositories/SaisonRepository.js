@@ -2,9 +2,11 @@ import { BaseRepository } from "./BaseRepository";
 import { supabase } from "../core/supabase/client";
 
 export class SaisonRepository extends BaseRepository {
-    constructor() {
-        super("saisons");
+
+    constructor(table) {
+        super(table);
     }
+
     async findAllActives(orderBy = "date_debut") {
 
         const { data, error } = await supabase
@@ -20,6 +22,12 @@ export class SaisonRepository extends BaseRepository {
         }
 
         return data;
+    }
+    setActive(id) {
+        return supabase.rpc(
+            "set_active_saison",
+            { p_id: id }
+        );
     }
 
 }

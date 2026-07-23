@@ -21,7 +21,8 @@ export function createEntityConfig({
     Validator = BaseValidator,
     Mapper = BaseMapper,
     Controller = BaseController,
-
+    actions = [],
+    useBaseActions = true,
     ...options
 
 }) {
@@ -42,7 +43,9 @@ export function createEntityConfig({
 
 
     const controller = new Controller(service);
-
+console.log("Validator utilisé :", Validator.name);
+console.log("Mapper utilisé :", Mapper.name);
+console.log("Controller utilisé :", Controller.name);
 
     return {
 
@@ -59,6 +62,14 @@ export function createEntityConfig({
         controller,
 
         columns,
+        actions: useBaseActions
+            ? [
+                ...actions,
+                ...baseConfig.actions,
+            ]
+            : [
+                ...actions
+            ],
 
         ...options
 

@@ -1,22 +1,18 @@
+import { createEntityConfig } from "./createEntityConfig";
 import { ChanteursSaisonController } from "../../controllers/ChanteursSaisonController";
-// import { SaisonChanteurController } from "../../controllers/SaisonChanteurController";
-import { SaisonChanteurMapper } from "../../mappers/SaisonChanteurMapper";
-import { baseConfig } from "./base.config";
+import { ChanteurSaisonMapper } from "../../mappers/ChanteurSaisonMapper";
+import { ChanteurSaisonRepository } from "../../repositories/ChanteurSaisonRepository";
+import { ChanteurSaisonService } from "../../services/ChanteurSaisonService";
 
-const controller = new ChanteursSaisonController();
-export const ChanteursSaisonConfig = {
-    ...baseConfig,
-    entity: "saisons",
-    title: "la saison",
-    table: "saisons",
-    controller: controller,
 
-    columns: [
+
+    const columns = [
         {
             field: "chanteur_id",
             header: "Chanteurs",
             type: "select",
             source: "availableChanteurs",
+            required: true,
             render: (v, row) => {
                 return `${row.chanteurs.nom} ${row.chanteurs.prenom}`
             }
@@ -26,46 +22,32 @@ export const ChanteursSaisonConfig = {
             field: "mail",
             header: "E-mail",
             type: "text",
+            hideInForm:true,
             // source: "availableChanteurs",
             render: (v, row) => {
                 return `${row.chanteurs.email}`
             }
-
+            
         },
         {
             field: "lien",
             header: "lien d'accès",
             type: "text",
+            hideInForm:true,
             // source: "availableChanteurs",
             render: (v, row) => {
                 // console.log(v)
                 // console.log(row)
                 console.log(row.acces)
-                const token=row.acces.length ? row.acces[0].token : ''
+                const token = row.acces.length ? row.acces[0].token : ''
                 return `${token}`
             }
 
         },
 
 
-    ],
-
-    mapper: SaisonChanteurMapper,
-
-    // ⭐ hooks optionnels
-    hooks: {
-        beforeSave: (form) => {
-            if (form.dateDebut > form.dateFin) {
-                throw new Error("Dates invalides");
-            }
-            return form;
-        }
-    },
-
-    // ⭐ actions custom (IMPORTANT)
-
-    actions: [
-        ...baseConfig.actions,
+    ];
+    const actions = [
         {
             label: "🔗 Générer lien",
             icon: "🔗",
@@ -80,6 +62,36 @@ export const ChanteursSaisonConfig = {
             label: "📩 Envoyer",
             icon: "📩",
             action: "sendAccessLink"
+        },
+        { label: "🗑 Supprimer", action: "delete" }
+    ]    
+
+export const ChanteursSaisonConfig = createEntityConfig({
+
+    entity: "chanteurSaison",
+    title: "🎤 Chanteurs de la saison",
+    table: "chanteurSaisons",
+    Repository: ChanteurSaisonRepository,
+    Service: ChanteurSaisonService,
+    Mapper: ChanteurSaisonMapper,
+    Controller: ChanteursSaisonController,
+
+    columns,
+
+
+
+    // ⭐ hooks optionnels
+    hooks: {
+        beforeSave: (form) => {
+            if (form.dateDebut > form.dateFin) {
+                throw new Error("Dates invalides");
+            }
+            return form;
         }
-    ]
-};
+    },
+
+    // ⭐ actions custom (IMPORTANT)
+    useBaseActions:false,
+    actions,
+
+});

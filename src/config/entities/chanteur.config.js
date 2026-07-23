@@ -30,7 +30,12 @@ const columns = [
     //     }
     // }
 ];
-
+    const actions= [
+        { label: "✏️ Modifier", action: "edit" },
+        { label: "⭐ Activer", action: "activate" },
+        { label: "👥 Chanteurs", action: "manageChanteurs" },
+        { label: "🗑 Supprimer", action: "delete" }
+    ]  
 
 export const chanteurConfig = createEntityConfig({
     entity,
@@ -42,11 +47,7 @@ export const chanteurConfig = createEntityConfig({
     Mapper: ChanteurMapper,
     // Controller: chanteurController
     columns,
+    // actions,
     defaultOrderBy: "nom",
-    actions: [
-        { label: "✏️ Modifier", action: "edit" },
-        { label: "⭐ Activer", action: "activate" },
-        { label: "👥 Chanteurs", action: "manageChanteurs" },
-        { label: "🗑 Supprimer", action: "delete" }
-    ]    
+  
 });

@@ -1,37 +1,51 @@
-import { SaisonChanteurController } from "../../controllers/SaisonChanteurController";
-import { SaisonChanteurMapper } from "../../mappers/SaisonChanteurMapper";
-import { baseConfig } from "./base.config";
+import { createEntityConfig } from "./createEntityConfig";
 
-const controller = new SaisonChanteurController();
-export const saisonChanteurConfig = {
-    ...baseConfig,
+
+import { SaisonChanteurMapper } from "../../mappers/SaisonChanteurMapper";
+
+import { SaisonChanteurController } from "../../controllers/SaisonChanteurController";
+import { SaisonChanteursValidator } from "../../validators/SaisonChanteursValidator";
+
+
+const columns = [
+    {
+        field: "chanteur_id",
+        header: "Chanteur",
+        type: "select",
+        source: "availableChanteurs",
+        render: (v, row) => {
+            return `${row.chanteurs.nom} ${row.chanteurs.prenom}`
+        }
+
+    }
+];
+const actions = [
+    { label: "✏️ Modifier", action: "edit" },
+    { label: "⭐ Activer", action: "activate" },
+    // { label: "👥 Chanteurs", action: "manageChanteurs" },
+    { label: "🗑 Supprimer", action: "delete" }
+];
+
+export const saisonChanteurConfig = createEntityConfig({
     entity: "saisons",
     title: "la saison",
     table: "saisons",
-    controller: controller,
+    controller: SaisonChanteurController,
+    // Repository: SaisonChanteurRepository,
+    // Service: SaisonChanteurSer,
+    Validator: SaisonChanteursValidator,
+    Mapper: SaisonChanteurMapper,
 
-    columns: [
-        {
-            field: "chanteur_id",
-            header: "Chanteur",
-            type: "select",
-            source: "availableChanteurs",
-            render: (v, row) => {
-                return `${row.chanteurs.nom} ${row.chanteurs.prenom}`
-            }
+    // {
+    //     field: "chanteurs",
+    //     header: "Chanteurs multiple",
+    //     type: "collectionCheckbox",
+    //     source: "availableChanteurs",
+    //     valueField: "id",
+    //     labelField: "nom"
+    // }
 
-        },
-        // {
-        //     field: "chanteurs",
-        //     header: "Chanteurs multiple",
-        //     type: "collectionCheckbox",
-        //     source: "availableChanteurs",
-        //     valueField: "id",
-        //     labelField: "nom"
-        // }
-    ],
 
-    mapper: SaisonChanteurMapper,
 
     // ⭐ hooks optionnels
     hooks: {
@@ -42,13 +56,9 @@ export const saisonChanteurConfig = {
             return form;
         }
     },
+    columns,
+    actions
+    
 
-    // ⭐ actions custom (IMPORTANT)
 
-    actions: [
-        { label: "✏️ Modifier", action: "edit" },
-        { label: "⭐ Activer", action: "activate" },
-        { label: "👥 Chanteurs", action: "manageChanteurs" },
-        { label: "🗑 Supprimer", action: "delete" }
-    ]
-};
+});

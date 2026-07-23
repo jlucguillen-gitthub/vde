@@ -170,6 +170,9 @@ const columns = [
 
 ];
 
+const actions= [
+];
+
 
 export const {entity}Config = createEntityConfig({{
 
@@ -186,11 +189,8 @@ export const {entity}Config = createEntityConfig({{
     Mapper: {cls}Mapper,
 
 
-    columns
-
-    actions: [
-        ...baseConfig.actions,
-    ]
+    columns,
+    actions
 
 }});
 """

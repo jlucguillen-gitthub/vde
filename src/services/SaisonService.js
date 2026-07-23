@@ -1,17 +1,14 @@
 import { BaseService } from "./BaseService";
-import { SaisonRepository } from "../repositories/SaisonRepository";
-import { SaisonValidator } from "../validators/SaisonValidator";
-import { supabase } from "../core/supabase/client";
 import { BaseResponse } from "../core/framework/BaseResponse";
-import { SaisonMapper } from "../mappers/SaisonMapper";
 
-const repo = new SaisonRepository();
-const validator = new SaisonValidator();
+
+
+
 export class SaisonService extends BaseService {
-    mapper = SaisonMapper;
 
-    constructor() {
-        super(repo, validator);
+
+    constructor(repository, validator, mapper) {
+        super(repository, validator, mapper);
     }
 
     async getAll(orderBy = "date_debut") {
@@ -37,6 +34,19 @@ export class SaisonService extends BaseService {
 
     // ⭐ spécifique métier
     async setActive(id) {
+
+        const result =
+            await this.repository.setActive(id);
+
+        if (result.error)
+            return BaseResponse.error([], result.error.message);
+
+        return BaseResponse.success(
+            null,
+            "Saison activée"
+        );
+    }
+    async setActivTODELe(id) {
 
         console.log("et ici")
         const { error } = await supabase

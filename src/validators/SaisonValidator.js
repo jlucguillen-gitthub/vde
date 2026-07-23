@@ -2,7 +2,17 @@ import { BaseValidator } from "./BaseValidator";
 
 export class SaisonValidator extends BaseValidator {
 
+
     validate(saison) {
+
+        super.validate(saison);
+
+        // règles spécifiques ici
+
+        return this.result();
+    }
+
+    validateTODEL(saison) {
         this.errors = [];
 
         if (!saison.nom) {

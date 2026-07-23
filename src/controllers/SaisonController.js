@@ -2,9 +2,9 @@ import { BaseController } from "./BaseController";
 import { SaisonService } from "../services/SaisonService";
 
 export class SaisonController extends BaseController {
-
-    constructor() {
-        super(new SaisonService());
+    
+    constructor(service) {
+        super(service);
     }
   
     getActive(onSuccess, onError) {

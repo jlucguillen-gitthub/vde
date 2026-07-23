@@ -1,19 +1,20 @@
-import { SaisonController } from "../../controllers/SaisonController";
+import { createEntityConfig } from "./createEntityConfig";
+
+import { SaisonRepository } from "../../repositories/SaisonRepository";
+import { SaisonService } from "../../services/SaisonService";
+import { SaisonValidator } from "../../validators/SaisonValidator";
 import { SaisonMapper } from "../../mappers/SaisonMapper";
-import { baseConfig } from "./base.config";
+import { SaisonController } from "../../controllers/SaisonController";
 
-const controller = new SaisonController();
-export const saisonConfig = {
-       ...baseConfig,
-    entity: "saisons",
-    title: "📅 Saisons",
-    table: "saisons",
-    controller: controller,
+    const actions = [
+        { label: "⭐ Activer", action: "activate" },
+        // { label: "👥 Chanteurs", action: "manageChanteurs" },
+    ];
 
-    columns: [
-        { field: "nom", header: "Nom", type: "text" },
-        { field: "dateDebut", header: "Début", type: "date" },
-        { field: "dateFin", header: "Fin", type: "date" },
+    const columns= [
+        { field: "nom", header: "Nom", type: "text" , required:true},
+        { field: "date_debut", header: "Début", type: "date" , required:true},
+        { field: "date_fin", header: "Fin", type: "date" , required:true},
         {
             field: "active",
             header: "Active",
@@ -21,10 +22,17 @@ export const saisonConfig = {
             hideInForm: true,
             render: (v) => (v ? "⭐" : "")
         }
-    ],
+    ];   
 
-    mapper: SaisonMapper,
-
+export const saisonConfig = createEntityConfig({
+    entity: "saisons",
+    title: "📅 Saisons",
+    table: "saisons",
+    Repository: SaisonRepository,
+    Service: SaisonService,
+    Validator: SaisonValidator,
+    Mapper: SaisonMapper,
+    Controller: SaisonController,
     // ⭐ hooks optionnels
     hooks: {
         beforeSave: (form) => {
@@ -36,11 +44,6 @@ export const saisonConfig = {
     },
 
     // ⭐ actions custom (IMPORTANT)
-
-    actions: [
-        { label: "✏️ Modifier", action: "edit" },
-        { label: "⭐ Activer", action: "activate" },
-        { label: "👥 Chanteurs", action: "manageChanteurs" },
-        { label: "🗑 Supprimer", action: "delete" }
-    ]
-};
+    columns,
+    actions
+});

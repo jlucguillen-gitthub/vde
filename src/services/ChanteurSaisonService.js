@@ -23,13 +23,9 @@ import { ChanteurSaisonRepository } from "../repositories/ChanteurSaisonReposito
 
 export class ChanteurSaisonService extends BaseService {
 
-    constructor() {
-
-        super(
-            new ChanteurSaisonRepository()
-        );
-
-        this.chanteurRepository = new ChanteurRepository();
+    constructor(repository, validator, mapper) {
+        super(repository, validator, mapper);
+        this.chanteurRepository = new ChanteurRepository('chanteurs');
     }
     async getAll() {
 
@@ -130,6 +126,17 @@ export class ChanteurSaisonService extends BaseService {
 
 
     async save(data) {
+        
+        if (this.validator) {
+            const validation = this.validator.validate(data);
+
+            if (!validation.valid) {
+                return BaseResponse.error(validation.errors);
+            }
+        } else {
+            alert( "pas de validateuir")
+            return
+        }
 
 
         return this.addChanteur(

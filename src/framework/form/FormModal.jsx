@@ -27,6 +27,7 @@ export default function FormModal({
                 if (f.type === "date") obj[f.field] = "";
                 if (f.type === "text") obj[f.field] = "";
                 if (f.type === "number") obj[f.field] = "";
+                if (f.type === "select") obj[f.field] = "";
                 if (f.type === "boolean") obj[f.field] = false;
             });
 

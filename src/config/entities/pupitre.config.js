@@ -1,38 +1,27 @@
-import { PupitreController } from "../../controllers/PupitreController";
-import { PupitreMapper } from "../../mappers/PupitreMapper";
+import { createEntityConfig } from "./createEntityConfig";
+
 import { PupitreRepository } from "../../repositories/PupitreRepository";
 import { PupitreService } from "../../services/PupitreService";
 import { PupitreValidator } from "../../validators/PupitreValidator";
-import { baseConfig } from "./base.config";
+import { PupitreMapper } from "../../mappers/PupitreMapper";
 
 
 const columns = [
-    {
-        field: "nom",
-        header: "Nom",
-        type: "text",
-        required: true
-    }
+{ field: "nom", header: "Nom", type: "text", required: true },
 ];
 
-const table = "pupitres";
-const repository = new PupitreRepository(table);
-const validator = new PupitreValidator(columns);
-const mapper = new PupitreMapper(columns);
-const service = new PupitreService(
-    repository,
-    validator,
-    mapper
-);
-
-const controller = new PupitreController(service);
+const actions= [
+];
 
 
-export const pupitreConfig = {
-    ...baseConfig,
-    entity: "pupitres",
-    title: "🎼 Pupitres",
-    table,
-    controller,
-    columns
-};
+export const pupitreConfig = createEntityConfig({
+    entity: "pupitre",
+    title: "🎼 les Pupitres",
+    table: "pupitres",
+    Repository: PupitreRepository,
+    Service: PupitreService,
+    Validator: PupitreValidator,
+    Mapper: PupitreMapper,
+    columns,
+    actions
+});

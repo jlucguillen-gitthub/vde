@@ -29,7 +29,8 @@ import SaisonChanteursPage from "../pages/admin/referentiels/saisons/SaisonChant
 import { SaisonProvider } from "../components/contexts/SaisonContext";
 import ChanteurSaisonPage from "../pages/admin/saisons/ChanteurSaisonPage";
 import ChansonPage from "../pages/admin/referentiels/chansons/ChansonPage";
-import PupitrePage from "../pages/admin/referentiels/puptitres/PupitrePage";
+import PupitrePage from "../pages/admin/referentiels/pupitre/PupitrePage";
+import RepetitionPage from "../pages/admin/referentiels/repetition/RepetitionPage";
 import ConcertsPage from "../pages/admin/referentiels/concert/ConcertPage";
 
 export default function Router() {
@@ -81,7 +82,7 @@ export default function Router() {
                     <Route path="chansons" element={<ChansonPage />} />
                     <Route path="pupitres" element={<PupitrePage />} />
                     <Route path="concerts" element={<ConcertsPage />} />
-                    <Route path="repetitions" element={<div>Répetitions</div>} />
+                    <Route path="repetitions" element={<RepetitionPage />} />
                     <Route path="invitations" element={<div>Invitations</div>} />
                 </Route>
 

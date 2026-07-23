@@ -4,13 +4,12 @@
 // appeler le service
 // retourner les réponses BaseResponse
 import { BaseController } from "./BaseController";
-import { SaisonChanteurService } from "../services/SaisonChanteurService";
 
 
 export class SaisonChanteurController extends BaseController {
 
-    constructor() {
-        super(new SaisonChanteurService());
+    constructor(service) {
+        super(service);
     }
 
 
