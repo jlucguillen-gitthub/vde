@@ -16,32 +16,28 @@ PATHS = {
 }
 
 
-# -----------------------
-# Helpers
-# -----------------------
+# -------------------------
+# Conversion noms
+# -------------------------
+
+def entity_name(table):
+
+    if table.endswith("s"):
+        return table[:-1]
+
+    return table
+
+
 
 def class_name(entity):
+
     return entity[0].upper() + entity[1:]
 
 
-def table_name(entity):
-    return entity + "s"
 
-
-def title_name(entity):
-
-    titles = {
-        "chanteur": "🎤 Chanteurs",
-        "pupitre": "🎼 Pupitres",
-        "saison": "📅 Saisons",
-        "chanson": "🎵 Chansons",
-    }
-
-    return titles.get(
-        entity,
-        entity.capitalize()
-    )
-
+# -------------------------
+# Création fichier
+# -------------------------
 
 def create_file(path, content):
 
@@ -58,16 +54,16 @@ def create_file(path, content):
         path,
         "w",
         encoding="utf-8"
-    ) as f:
-        f.write(content)
+    ) as file:
+        file.write(content)
 
     print("Créé :", path)
 
 
 
-# -----------------------
+# -------------------------
 # Templates
-# -----------------------
+# -------------------------
 
 def repository_template(cls):
 
@@ -82,6 +78,7 @@ export class {cls}Repository extends BaseRepository {{
 
 }}
 """
+
 
 
 def service_template(cls):
@@ -99,6 +96,7 @@ export class {cls}Service extends BaseService {{
 """
 
 
+
 def validator_template(cls):
 
     return f"""import {{ BaseValidator }} from "./BaseValidator";
@@ -114,6 +112,7 @@ export class {cls}Validator extends BaseValidator {{
 """
 
 
+
 def mapper_template(cls):
 
     return f"""import {{ BaseMapper }} from "./BaseMapper";
@@ -127,6 +126,7 @@ export class {cls}Mapper extends BaseMapper {{
 
 }}
 """
+
 
 
 def controller_template(cls, custom):
@@ -153,9 +153,10 @@ export class {cls}Controller extends BaseController {{
 """
 
 
-def config_template(entity, cls, table, title):
 
-    return f"""import {{ createEntityConfig }} from "../createEntityConfig";
+def config_template(entity, cls, table):
+
+    return f"""import {{ createEntityConfig }} from "./createEntityConfig";
 
 import {{ {cls}Repository }} from "../../repositories/{cls}Repository";
 import {{ {cls}Service }} from "../../services/{cls}Service";
@@ -174,7 +175,7 @@ export const {entity}Config = createEntityConfig({{
 
     entity: "{entity}",
 
-    title: "{title}",
+    title: "TODO",
 
     table: "{table}",
 
@@ -191,6 +192,7 @@ export const {entity}Config = createEntityConfig({{
 """
 
 
+
 def page_template(entity, cls):
 
     return f"""import {{ useEffect, useState }} from "react";
@@ -201,72 +203,69 @@ import {{ {entity}Config }} from "../../../../config/entities/{entity}.config";
 
 export default function {cls}Page() {{
 
-  const [session, setSession] = useState(null);
+    const [session, setSession] = useState(null);
 
 
-  useEffect(() => {{
+    useEffect(() => {{
 
-    const fetchSession = async () => {{
+        const fetchSession = async () => {{
 
-      const {{ data: {{ session }} }} =
-        await supabase.auth.getSession();
+            const {{ data: {{ session }} }} =
+                await supabase.auth.getSession();
 
-      console.log(session);
+            console.log(session);
 
-      setSession(session);
+            setSession(session);
 
-    }};
-
-
-    fetchSession();
-
-  }}, []);
+        }};
 
 
+        fetchSession();
 
-  return (
-    <CRUDPage
-        config={{{entity}Config}}
-    />
-  );
+    }}, []);
+
+
+
+    return (
+        <CRUDPage
+            config={{{entity}Config}}
+        />
+    );
 
 }}
 """
 
 
 
-# -----------------------
-# Main
-# -----------------------
+# -------------------------
+# MAIN
+# -------------------------
 
 if len(sys.argv) < 2:
 
     print(
-        "Usage : python generate_entity.py entity [--custom-controller]"
+        "Usage : python generate_entity.py nom_table [--custom-controller]"
     )
 
     sys.exit(1)
 
 
 
-entity = sys.argv[1]
+table = sys.argv[1]
 
 custom_controller = "--custom-controller" in sys.argv
 
 
+entity = entity_name(table)
+
 cls = class_name(entity)
-
-table = table_name(entity)
-
-title = title_name(entity)
 
 
 
 print()
-print("entity :", entity)
-print("class  :", cls)
-print("table  :", table)
-print("title  :", title)
+print("Table  :", table)
+print("Entity :", entity)
+print("Class  :", cls)
 print()
 
 
@@ -309,8 +308,7 @@ create_file(
     config_template(
         entity,
         cls,
-        table,
-        title
+        table
     )
 )
 

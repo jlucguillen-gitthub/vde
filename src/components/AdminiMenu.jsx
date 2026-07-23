@@ -8,6 +8,7 @@ export default function AdminMenu() {
     const controller = new SaisonController();
 
     const [openSaisons, setOpenSaisons] = useState(true);
+    const [openReferentiels, setOpenReferentiels] = useState(true);
     const [openSeason, setOpenSeason] = useState({});
     // const [saisons, setSaisons] = useState([]);
     const {
@@ -100,9 +101,14 @@ export default function AdminMenu() {
             ))}
 
             <hr />
-
-            <b>📚 Référentiel</b>
-
+            <p
+                style={{ cursor: "pointer", fontWeight: "bold" }}
+                onClick={() => setOpenReferentiels(!openReferentiels)}
+            >
+            📚 Référentiels {openReferentiels ? "▼" : "▶"}
+            </p>
+             {openReferentiels && (
+                <div>
             <p style={{ cursor: "pointer" }} onClick={() => navigate("/admin/saisons")}>
                 📅 Saisons
             </p>
@@ -130,7 +136,8 @@ export default function AdminMenu() {
             <p style={{ cursor: "pointer" }} onClick={() => navigate("/admin/invitations")}>
                 📨 Invitations
             </p>
-
+            </div>
+             )}
             <hr />
 
 

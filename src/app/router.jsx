@@ -30,6 +30,7 @@ import { SaisonProvider } from "../components/contexts/SaisonContext";
 import ChanteurSaisonPage from "../pages/admin/saisons/ChanteurSaisonPage";
 import ChansonPage from "../pages/admin/referentiels/chansons/ChansonPage";
 import PupitrePage from "../pages/admin/referentiels/puptitres/PupitrePage";
+import ConcertsPage from "../pages/admin/referentiels/concert/ConcertPage";
 
 export default function Router() {
 
@@ -79,7 +80,7 @@ export default function Router() {
                     <Route path=":saison_nom/chanteurs" element={<SaisonChanteursPage />} />
                     <Route path="chansons" element={<ChansonPage />} />
                     <Route path="pupitres" element={<PupitrePage />} />
-                    <Route path="concerts" element={<div>Concerts</div>} />
+                    <Route path="concerts" element={<ConcertsPage />} />
                     <Route path="repetitions" element={<div>Répetitions</div>} />
                     <Route path="invitations" element={<div>Invitations</div>} />
                 </Route>
